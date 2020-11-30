@@ -6,8 +6,9 @@ namespace Kunoichi\AssetsLazyLoader\Pattern;
  * Abstract Singleton pattern.
  *
  * @package assets-lazy-loader
- * @property-read bool $in_admin
- * @property-read bool $in_login
+ * @property-read bool   $in_admin Not activate on admin screen.
+ * @property-read bool   $in_login Not activate on login screen.
+ * @property-read string $dir      Root directory.
  */
 abstract class Singleton {
 
@@ -79,7 +80,9 @@ abstract class Singleton {
 	 * @return mixed
 	 */
 	public function __get( $name ) {
-		if ( isset( $this->setting[ $name ] ) ) {
+		if ( 'dir' === $name ) {
+			return dirname( dirname( dirname( dirname( __DIR__ ) ) ) );
+		} elseif ( isset( $this->setting[ $name ] ) ) {
 			return $this->setting[ $name ];
 		} else {
 			return null;

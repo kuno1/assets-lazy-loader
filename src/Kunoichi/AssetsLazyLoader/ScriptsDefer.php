@@ -30,6 +30,12 @@ class ScriptsDefer extends Singleton {
 	 * Register filter hooks.
 	 */
 	protected function init() {
+		if ( $this->in_admin || $this->in_login ) {
+			// Avoid concatenation.
+			if ( ! defined( 'CONCATENATE_SCRIPTS' ) ) {
+				define( 'CONCATENATE_SCRIPTS', false );
+			}
+		}
 		if ( ! $this->in_admin && is_admin() ) {
 			// This is admin and not in admin.
 			return;

@@ -39,3 +39,10 @@ ScriptsDefer::enable( [
 	'exclude'  => 'jquery-core', // Should be array, but specifying string for fallback check.
 	'in_login' => false,
 ] );
+
+// Style defer.
+StyleLoader::enable( [
+	'exclude'  => StyleLoader::admin_critical( ['twentytwenty-style'] ), // Exclude default style.
+	'in_login' => true,
+	'in_admin' => true,
+] );
