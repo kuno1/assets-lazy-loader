@@ -1,0 +1,19 @@
+{
+    "name": "kunoichi/assets-lazy-loader",
+    "description": "Lazy loader for WordPress theme.",
+    "type": "library",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Kunoichi INC",
+            "email": "sushi@kunoichiwp.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "autoload": {
+        "psr-0": {
+            "Kunoichi\\AssetsLazyLoader": "./src"
+        }
+    }
+}
