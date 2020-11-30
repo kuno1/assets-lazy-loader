@@ -46,3 +46,12 @@ StyleLoader::enable( [
 	'in_login' => true,
 	'in_admin' => true,
 ] );
+
+// Lazy load images.
+ImageLazyLoader::enable();
+// If eye catch, they shouldn't be lazy.
+add_filter( 'assets_lazy_loader_image', function( $should, $tag ) {
+	print_r( $tag );
+	exit;
+	return false !== strpos( $tag,  'size-post-thumbnail' );
+}, 10, 2 );
