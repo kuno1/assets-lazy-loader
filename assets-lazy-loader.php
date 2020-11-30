@@ -33,3 +33,9 @@ JqueryOptimizer::enable( [
 add_action( 'wp_enqueue_scripts', function() {
 	wp_enqueue_script( 'jquery' );
 } );
+
+// Defer JS
+ScriptsDefer::enable( [
+	'exclude'  => 'jquery-core', // Should be array, but specifying string for fallback check.
+	'in_login' => false,
+] );

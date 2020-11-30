@@ -2,3 +2,4 @@
 /vendor/
 /wordpress/
 package-lock.json
+composer.lock
