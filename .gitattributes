@@ -4,3 +4,4 @@
 .wp-env.json export-ignore
 assets-lazy-loader.php export-ignore
 package.json export-ignore
+test.js export-ignore

@@ -3,28 +3,19 @@
 namespace Kunoichi\AssetsLazyLoader;
 
 
-use Kunoichi\AssetsLazyLoader\Pattern\Singleton;
+use Kunoichi\AssetsLazyLoader\Pattern\HandleDetector;
 
 /**
  * Defer JavaScripts
  *
  * @package assets-lazy-loader
- * @property-read string[] $exclude
  */
-class ScriptsDefer extends Singleton {
+class ScriptsDefer extends HandleDetector {
 
 	/**
-	 * Override parser
-	 *
-	 * @param array $args
-	 *
-	 * @return array
+	 * @var string[] Critical scripts not to be deferred.
 	 */
-	protected function parse_args( $args ) {
-		return array_merge( [
-			'exclude' => [],
-		], parent::parse_args( $args ) );
-	}
+	protected $critical_scripts = [ 'wp-i18n' ];
 
 	/**
 	 * Register filter hooks.
@@ -35,14 +26,6 @@ class ScriptsDefer extends Singleton {
 			if ( ! defined( 'CONCATENATE_SCRIPTS' ) ) {
 				define( 'CONCATENATE_SCRIPTS', false );
 			}
-		}
-		if ( ! $this->in_admin && is_admin() ) {
-			// This is admin and not in admin.
-			return;
-		}
-		if ( ! $this->in_login && $this->is_login() ) {
-			// This is login screen and not in login.
-			return;
 		}
 		// Filter script loader.
 		add_filter( 'script_loader_tag', [ $this, 'script_loader_tag' ], 9999, 2 );
@@ -56,8 +39,7 @@ class ScriptsDefer extends Singleton {
 	 * @return string
 	 */
 	public function script_loader_tag( $tag, $handle ) {
-		// If this is excluded tag, skip.
-		if ( in_array( $handle, (array) $this->exclude, true ) ) {
+		if ( ! $this->is_valid_handle( $handle ) ) {
 			return $tag;
 		}
 		// Already having "defer" or "async", skip.
@@ -66,7 +48,33 @@ class ScriptsDefer extends Singleton {
 				return $tag;
 			}
 		}
+		// If critical, skip.
+		if ( in_array( $handle, $this->critical_scripts, true ) ) {
+			return $tag;
+		}
+		// Having after script, skip.
+		if ( $this->has_after( $handle ) ) {
+			return $tag;
+		}
 		// Add defer.
 		return str_replace( ' src=', ' defer src=', $tag );
+	}
+
+	/**
+	 * If after script, skip.
+	 *
+	 * @param string $handle
+	 * @return bool
+	 */
+	protected function has_after( $handle ) {
+		global $wp_scripts;
+		if ( ! isset( $wp_scripts->registered[ $handle ] ) ) {
+			return false;
+		}
+		$script = $wp_scripts->registered[ $handle ];
+		if ( ! empty( $script->extra['after'] ) ) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -3,15 +3,14 @@
 namespace Kunoichi\AssetsLazyLoader;
 
 
-use Kunoichi\AssetsLazyLoader\Pattern\Singleton;
+use Kunoichi\AssetsLazyLoader\Pattern\HandleDetector;
 
 /**
  * Style loader.
  *
  * @package assets-lazy-loader
- * @property-read string[] $exclude
  */
-class StyleLoader extends Singleton {
+class StyleLoader extends HandleDetector {
 
 	/**
 	 * @var bool If set preload at least 1, enable.
@@ -26,18 +25,6 @@ class StyleLoader extends Singleton {
 	 */
 	public static function admin_critical( $extra = [] ) {
 		return array_merge( [ 'login', 'common', 'admin-bar', 'admin-menu', 'dashboard' ], $extra );
-	}
-
-	/**
-	 * Add extra arguments.
-	 *
-	 * @param array $args
-	 * @return array
-	 */
-	protected function parse_args( $args ) {
-		return array_merge( [
-			'exclude' => [],
-		], parent::parse_args( $args ) );
 	}
 
 	/**
@@ -77,15 +64,7 @@ class StyleLoader extends Singleton {
 	 * @return string
 	 */
 	public function style_loader_tag( $tag, $handle, $href, $media ) {
-		if ( ( ! $this->in_admin ) && is_admin() ) {
-			// If not in admin, skip.
-			return $tag;
-		}
-		if ( ( ! $this->in_login ) && $this->is_login() ) {
-			// If not in login, skip.
-			return $tag;
-		}
-		if ( in_array( $handle, (array) $this->exclude, true ) ) {
+		if ( ! $this->is_valid_handle( $handle ) ) {
 			return $tag;
 		}
 		// If already preload or print, skip.

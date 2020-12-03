@@ -45,6 +45,16 @@ Kunoichi\AssetsLazyLoader\ScriptsDefer::enable( [
 ] );
 ```
 
+Some JavaScripts have following scripts via `wp_add_inline_script`. This may cause critical erros. `ScriptDefer` skips enqueued scripts with `after` section, but for more safety, consider allow list approach.
+
+```php
+Kunoichi\AssetsLazyLoader\ScriptsDefer::enable( [
+	// Defer scripts only which you know they are safe with defer attribute.
+	'exclude'  => [ 'your-js', 'jquery' ], 
+] );
+```
+
+
 ### CSS Preload
 
 Add `rel="preload"` to `link` tag and fallback scripts.

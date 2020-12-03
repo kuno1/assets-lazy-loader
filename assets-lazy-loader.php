@@ -31,7 +31,7 @@ JqueryOptimizer::enable( [
 
 // Enqueue jQuery
 add_action( 'wp_enqueue_scripts', function() {
-	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'assets-lazy-loader', plugins_url( 'test.js', __FILE__ ), [ 'jquery', 'wp-api-fetch' ], '1.0.0' );
 } );
 
 // Defer JS
