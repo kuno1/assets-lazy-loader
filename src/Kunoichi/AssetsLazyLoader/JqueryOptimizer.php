@@ -39,15 +39,16 @@ class JqueryOptimizer extends Singleton {
 	}
 
 	/**
-	 * Change jQuery to
+	 * Change jQuery to footer.
+	 *
+	 * @param \WP_Scripts $wp_scripts
 	 */
-	public function enhance_jquery() {
+	public function enhance_jquery( $wp_scripts ) {
 		// Do nothing on admin screen.
 		// It's prohibit to remove jQuery.
 		if ( is_admin() || $this->is_login() ) {
 			return;
 		}
-		global $wp_scripts;
 		if ( ! isset( $wp_scripts->registered['jquery-core'] ) ) {
 			// jQuery is not registered.
 			return;
@@ -61,10 +62,9 @@ class JqueryOptimizer extends Singleton {
 		// Flag to move_footer.
 		$move_jquery_to_footer = (bool) $this->footer;
 		// Remove existing.
-		wp_deregister_script( 'jquery' );
-		wp_deregister_script( 'jquery-core' );
+		$wp_scripts->remove( [ 'jquery', 'jquery-core' ] );
 		// Register them again.
-		wp_register_script( 'jquery', false, [ 'jquery-core' ], $jquery_ver, $move_jquery_to_footer );
-		wp_register_script( 'jquery-core', $jquery_src, [], $jquery_ver, $move_jquery_to_footer );
+		$wp_scripts->add( 'jquery-core', $jquery_src, [], $jquery_ver, $move_jquery_to_footer );
+		$wp_scripts->add( 'jquery', false, [ 'jquery-core' ], $jquery_ver, $move_jquery_to_footer );
 	}
 }

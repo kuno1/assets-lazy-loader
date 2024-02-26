@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/kuno1/assets-lazy-loader#readme",
   "devDependencies": {
-    "@wordpress/env": "9.0",
-    "fg-loadcss": "^2.1.0"
+    "@wordpress/env": "9.0"
   }
 }
