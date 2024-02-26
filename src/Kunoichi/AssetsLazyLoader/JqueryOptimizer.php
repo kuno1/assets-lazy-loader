@@ -60,7 +60,7 @@ class JqueryOptimizer extends Singleton {
 		$jquery_ver = $this->version ?: $jquery->ver;
 		$jquery_src = $this->src ?: $jquery->src;
 		// Flag to move_footer.
-		$move_jquery_to_footer = (bool) $this->footer;
+		$move_jquery_to_footer = (int) $this->footer;
 		// Remove existing.
 		$wp_scripts->remove( [ 'jquery', 'jquery-core' ] );
 		// Register them again.
