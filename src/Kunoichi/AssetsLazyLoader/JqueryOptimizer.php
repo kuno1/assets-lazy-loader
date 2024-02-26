@@ -19,7 +19,7 @@ class JqueryOptimizer extends Singleton {
 	 */
 	protected function init() {
 		// Change jQuery path.
-		add_action( 'init', [ $this, 'enhance_jQuery' ], 1 );
+		add_action( 'wp_default_scripts', [ $this, 'enhance_jquery' ], 11 );
 		$this->setting = wp_parse_args( $this->setting );
 	}
 
@@ -47,8 +47,12 @@ class JqueryOptimizer extends Singleton {
 		if ( is_admin() || $this->is_login() ) {
 			return;
 		}
-		// Save current version.
 		global $wp_scripts;
+		if ( ! isset( $wp_scripts->registered['jquery-core'] ) ) {
+			// jQuery is not registered.
+			return;
+		}
+		// Save current version.
 		$jquery     = $wp_scripts->registered['jquery-core'];
 		// Set jQuery version and src if specified.
 		// If not set, use default.
